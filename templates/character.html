@@ -7,17 +7,46 @@
 <body>
     {% include 'navigation.html' %}
 
-    <h1>Character</h1>
-    <p>ID: {{ character.id }}</p>
-    <p>Name: {{ character.name }}</p>
-    <p>Age: {{ character.age }}</p>
-    <p>Gender: {{ character.gender }}</p>
-    <p>Occupation: {{ character.occupation }}</p>
-    <p>Height: {{ character.height }}</p>
-    <p>Hair color: {{ character.hair_color }}</p>
-    <p>Eye color: {{ character.eye_color }}</p>
-    <p>Weight: {{ character.weight }}</p>
-    <p>Location: {{ character.location }}</p>
-    <p>Description: {{ character.desc }}</p>
+     <div id="character-container">
+      <h1 id="character-name">{{ character.name }}</h1>
+      <div id="character-details">
+        <div id="character-detail-block">
+          <h2>Gender:</h2>
+          <p>{{ character.gender }}</p>
+        </div>
+        <div id="character-detail-block">
+          <h2>Age:</h2>
+          <p>{{ character.age }}</p>
+        </div>
+        <div id="character-detail-block">
+          <h2>Occupation:</h2>
+          <p>{{ character.occupation }}</p>
+        </div>
+        <div id="character-detail-block">
+          <h2>Height:</h2>
+          <p>{{ character.height }}</p>
+        </div>
+        <div id="character-detail-block">
+          <h2>Hair Color:</h2>
+          <p>{{ character.hair_color }}</p>
+        </div>
+        <div id="character-detail-block">
+          <h2>Eye Color:</h2>
+          <p>{{ character.eye_color }}</p>
+        </div>
+        <div id="character-detail-block">
+          <h2>Weight:</h2>
+          <p>{{ character.weight }}</p>
+        </div>
+        <div id="character-detail-block">
+          <h2>Location:</h2>
+          <p>{{ character.location }}</p>
+        </div>
+      </div>
+      <div id="character-description">
+        <h2>Description:</h2>
+        <p>{{ character.desc}}</p>
+      </div>
+    </div>
 </body>
 </html>

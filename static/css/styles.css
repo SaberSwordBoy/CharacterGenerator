@@ -26,7 +26,7 @@ form {
     width: 100%; /* change the width of the form to 100% of the container */
     margin-right: 2%;
     padding: 1rem;
-    flex: 1;
+    flex: 2;
 
     display: flex; /* use flex layout for the form */
     flex-wrap: wrap; /* allow elements to wrap to the next line if needed */
@@ -185,4 +185,35 @@ nav a:hover {
         font-size: larger;
         width: 90%;
     }
+}
+
+#character-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+#character-name {
+    text-align: center;
+    font-size: 2.5em;
+}
+
+#character-details {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#character-detail-block {
+    width: 30%;
+    padding: 10px;
+    margin: 10px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
+}
+
+#character-description {
+    width: 80%;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: #f2f2f2;
+    border-radius: 10px;
 }
