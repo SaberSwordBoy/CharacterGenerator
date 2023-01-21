@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Generated Character</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}">
+
+    </head>
+    <body>
+        <h1>{{ name }}</h1>
+        <div class="output">
+            <div class="character-info">
+                <div class="info-box">
+                    <p>Character ID: <span class="info">{{ id }}</span></p>
+                    <p>Age: <span class="info">{{ age }}</span></p>
+                    <p>Gender: <span class="info">{{ gender }}</span></p>
+                    <p>Hair color: <span class="info">{{ hair_color }}</span></p>
+                    <p>Eye color: <span class="info">{{ eye_color }}</span></p>
+                    <p>Weight: <span class="info">{{ weight }}</span></p>
+                    <p>Occupation: <span class="info">{{ occupation }}</span></p>
+                    <p>Location: <span class="info">{{ location }}</span></p>
+                    <!-- add more details here -->
+                </div>
+                <div class="description-box">
+                    <p>{{ description }}</p>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

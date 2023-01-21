@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Character Generator</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}">
+    </head>
+    <body>
+       {% include 'navigation.html' %}
+        <h1>Character Generator</h1>
+        <div class="container">
+            <div class="description">
+                    <p>This website generates a unique character based on the input provided by the user. You can specify details such as age, gender, occupation, and more, or leave them blank and let the AI generate the details for you.</p>
+                </div>
+                <form method="post" action=".">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name">
+                    <br>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required></textarea>
+                    <br>
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" name="gender">
+                    <br>
+                    <label for="age">Age:</label>
+                    <input type="text" id="age" name="age">
+                    <br>
+                    <label for="occupation">Occupation:</label>
+                    <input type="text" id="occupation" name="occupation">
+                    <br>
+                    <label for="height">Height:</label>
+                    <input type="text" id="height" name="height">
+                    <br>
+                    <label for="hair_color">Hair Color:</label>
+                    <input type="text" id="hair_color" name="hair_color">
+                    <br>
+                    <label for="eye_color">Eye Color:</label>
+                    <input type="text" id="eye_color" name="eye_color">
+                    <br>
+                    <label for="weight">Weight:</label>
+                    <input type="text" id="weight" name="weight">
+                    <br>
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location">
+                    <br>
+                    <input type="submit" value="Generate Character">
+                </form>
+        </div>
+    </body>
+</html>

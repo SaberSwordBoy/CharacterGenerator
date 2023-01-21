@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Character</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    {% include 'navigation.html' %}
+
+    <h1>Character</h1>
+    <p>ID: {{ character.id }}</p>
+    <p>Name: {{ character.name }}</p>
+    <p>Age: {{ character.age }}</p>
+    <p>Gender: {{ character.gender }}</p>
+    <p>Occupation: {{ character.occupation }}</p>
+    <p>Height: {{ character.height }}</p>
+    <p>Hair color: {{ character.hair_color }}</p>
+    <p>Eye color: {{ character.eye_color }}</p>
+    <p>Weight: {{ character.weight }}</p>
+    <p>Location: {{ character.location }}</p>
+    <p>Description: {{ character.desc }}</p>
+</body>
+</html>

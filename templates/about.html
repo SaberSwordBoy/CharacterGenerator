@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Style the about page */
+h1 {
+    text-align: center;
+    margin: 1rem 0;
+}
+
+p {
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+    </style>
+</head>
+<body>
+    {% include 'navigation.html' %}
+    <h1>About</h1>
+    <p>This is a simple web application created to generate original characters using OpenAI's API.</p>
+    <p>You can contact me at <a href="mailto:brycelegos06@gmail.com">brycelegos06@gmail.com</a> or follow me on Instagram <a href="https://www.instagram.com/sab3rsw0rd/">@sab3rsw0rd</a>.</p>
+</body>
+</html>
