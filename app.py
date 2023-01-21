@@ -6,17 +6,20 @@ import pickle
 import uuid
 from flask_login import LoginManager, login_user
 from secrets import compare_digest
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(), 'data/users.db')
 
+db = SQLAlchemy(app)
+
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-load_dotenv()
 
 DAVINCI = 'text-davinci-003'
 CURIE = 'text-curie-001'
