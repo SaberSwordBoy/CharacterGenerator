@@ -15,7 +15,7 @@ h1 {
 
 /* style the container */
 .container {
-    width: 50%; /* change the width of the container to 80% of the window */
+    width: 80%; /* change the width of the container to 80% of the window */
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
@@ -86,10 +86,11 @@ form input[type="submit"]:hover {
 
 p {
     font-size: 1.2rem;
-    margin: 0.5rem 0;
+    margin: 1rem 0;
     padding: 0.5rem;
     background-color: #f9f9f9;
     border-radius: 5px;
+    width: 100%;
 }
 
 /* Style the character's ID */
@@ -159,34 +160,6 @@ nav a:hover {
     background-color: #fff;
 }
 
-@media (max-width: 576px) {
-    /* Add styles for small devices here */
-    nav {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    nav a {
-        margin: 0.5rem;
-        padding: 0.5rem;
-        width: 100%;
-    }
-
-    nav {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    nav a {
-        margin: 0.5rem;
-        padding: 0.5rem;
-        width: 100%;
-    }
-
-    body {
-        font-size: larger;
-        width: 90%;
-    }
-}
-
 #character-container {
     width: 80%;
     margin: 0 auto;
@@ -216,4 +189,10 @@ nav a:hover {
     padding: 10px;
     background-color: #f2f2f2;
     border-radius: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    width: 100%; /* change the width of the container to 80% of the window */
+}
 }
