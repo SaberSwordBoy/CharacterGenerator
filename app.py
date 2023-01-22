@@ -8,9 +8,18 @@ from flask_login import LoginManager, login_user
 from secrets import compare_digest
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
+import logging
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logging.basicConfig(filename="./logs/visits.log",
+        filemode='a',
+        format='%(asctime)s,$(msecs)d %(name)s %(levelname)s %(message)s',
+        datefmt='%H:%M:%S',
+        level=logging.DEBUG)
+
+logging.info("Server file started...")
 
 app = Flask(__name__)
 
@@ -63,7 +72,7 @@ def load_user(user_id):
 openai.api_key = os.getenv("API_KEY")
 
 def generate_value_with_api_call(name):
-
+    #logging.info(f"Generating {name}")
     if name == "weight":
         return random.randint(90,200)
 
@@ -108,6 +117,7 @@ def generate_random_name():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    logging.info(f"{request.remote_addr} {request.method} requested /")
     if request.method == "POST":
         # Get user input for the character's name and description
         name = request.form["name"]
@@ -217,6 +227,7 @@ def index():
 
 @app.route('/character/<id>')
 def character(id):
+    #logging.info(f"{request.remote_addr} requested /character/{id}")
     # load the character object from the file
     with open(f'data/saved_characters/{id}.pickle', 'rb') as f:
         data = pickle.load(f)
@@ -225,6 +236,7 @@ def character(id):
 
 @app.route('/characters')
 def characters():
+    #logging.info(f"{request.remote_addr} requested /characters/")
     characters = []
     for file_name in os.listdir("./data/saved_characters/"):
 
@@ -236,6 +248,7 @@ def characters():
 
 @app.route("/about")
 def about():
+    #logging.info(f"{request.remote_addr} requested /about/")
     return render_template("about.html")
 
 
@@ -280,4 +293,4 @@ def register():
     return render_template('register.html')
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=False)
+    app.run(host="0.0.0.0", port=80, debug=False)
