@@ -111,7 +111,7 @@ def generate_value_with_api_call(name):
 
     with open(API_USAGE_FILE, "a") as file:
         writer_obj = writer(file)
-        writer_obj.writerow([datetime.datetime.now(), token_usage, bytes(f"Generated {name}")])
+        writer_obj.writerow([datetime.datetime.now(), token_usage, f"Generated {name}"])
 
     return value.choices[0].text
 
@@ -334,7 +334,7 @@ def api_usage():
         writerobj = writer(file)
         writerobj.writerows(csv_data)
 
-    return processed_data
+    return csv_data
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=False)
