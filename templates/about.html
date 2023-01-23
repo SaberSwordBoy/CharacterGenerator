@@ -1,33 +1,92 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>About | CharacterCraft</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        /* Style the about page */
+    <title>CharacterCraft - About</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}">
+    <Style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
 h1 {
     text-align: center;
-    margin: 1rem 0;
+    font-size: 3em;
+    margin-bottom: 20px;
 }
 
 p {
-    font-size: 1.2rem;
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    background-color: #f9f9f9;
-    border-radius: 5px;
+    font-size: 1.2em;
+    line-height: 1.5;
+    margin-bottom: 20px;
 }
 
-    </style>
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.contact-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.about-link {
+    margin-right: 10px;
+    color: ghostwhite;
+    text-decoration: none;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    p {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+}
+
+    </Style>
 </head>
 <body>
-    {% include 'navigation.html' %}
+    {% include "navigation.html" %}
+
     <div class="container">
-        <h1>About</h1>
-        <p>This is a simple web application created to generate original characters using OpenAI's API.</p>
-        <p>You can contact me at <a href="mailto:brycelegos06@gmail.com">brycelegos06@gmail.com</a> or follow me on Instagram
-            <a href="https://www.instagram.com/sab3rsw0rd/">@sab3rsw0rd</a>.
+        <h1 class="about-title">About CharacterCraft</h1>
+        <p class="about-text">CharacterCraft is a web application that allows users to generate unique and detailed characters for their creative projects.
+            The characters are generated using OpenAI's GPT-3 language model and can be customized to fit the user's needs.
+            The application also allows the user to save the generated characters and view them later, with user accounts and editing coming soon!
+            <br><br>
+            <em>This website was created partly using AI from openai.com.</em>
         </p>
+        <div class="contact-links">
+            <p class="about-text">If you have any questions or feedback, you can contact us through:</p>
+            <a class="about-link" href="mailto:brycelegos06@gmail.com">Email</a>
+            <a class="about-link" href="https://www.instagram.com/sab3rsw0rd/">Instagram</a>
+            <a class="about-link" href="https://github.com/SaberSwordBoy/CharacterCraft">GitHub</a>
+        </div>
     </div>
+
 </body>
 </html>
