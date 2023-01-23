@@ -90,17 +90,17 @@ def generate_value_with_api_call(name):
                                          prompt="Generate a place that a person could live. ",max_tokens=20,n=1,temperature=0.7)
     elif name == "age":
         value = openai.Completion.create(engine=CURIE,
-                                         prompt="Pick a random age (in years) for my character",max_tokens=10,n=1,temperature=0.5)
+                                         prompt="Pick a random age (in years) for my character",max_tokens=3,n=1,temperature=0.5)
     elif name == "eye_color":
         value = random.choice(common_eye_colors) if random.randint(1,10) < 7 else random.choice(uncommon_eye_colors)
         return value
 
     elif name == "hair_color":
         value = openai.Completion.create(engine=CURIE,
-                                         prompt=f"Give me one hair color. ",max_tokens=15,n=1,temperature=0.7)
+                                         prompt=f"Give me one hair color. ",max_tokens=4,n=1,temperature=0.7)
     elif name == "gender":
         value = openai.Completion.create(engine=CURIE,
-                                         prompt=f"Pick a gender for my character",max_tokens=15,n=1,temperature=0.7)
+                                         prompt=f"Pick a gender for my character",max_tokens=2,n=1,temperature=0.4)
     else:
         value = openai.Completion.create(engine=DAVINCI,
                                          prompt=f"What {name} should my character have?", max_tokens=15, n=1,
