@@ -9,7 +9,7 @@
     <h1>Characters</h1>
     <ul>
         {% for character in characters %}
-        <li><a href="{{ url_for('character', id=character.id) }}">{{ character.name }}</a></li>
+	<li><a href="{{ url_for('character', id=character.id) }}">{{ character.name }} - {{ character.occupation }}</a></li>
         {% endfor %}
     </ul>
 </body>
