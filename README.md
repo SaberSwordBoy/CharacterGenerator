@@ -20,5 +20,49 @@ CharacterCraft is built using the Flask web framework for Python. It uses OpenAI
 
 CharacterCraft is a powerful tool for any creative project and is constantly being updated and improved to better serve its users. Whether you're an author, game master, or just looking for inspiration, CharacterCraft is the perfect tool for generating unique and detailed characters.
 
+# Setting up CharacterCraft
+This guide will walk you through the process of setting up the CharacterCraft web application on your server.
+
+## Prerequisites
+* A server running Linux (Ubuntu 18.04 LTS recommended)
+* Python 3.6 or higher
+* pip3
+* Git
+* An OpenAI API key (https://openai.com/api)
+
+### Installing Flask
+Make sure that your server has Python 3.6 or higher installed by running python3 -V.
+
+
+If not already installed, install pip3 by running sudo apt-get install python3-pip.
+
+
+Use pip3 to install Flask by running pip3 install flask.
+
+Verify that Flask was installed correctly by running python3 -c "import flask; print(flask.__version__)". This should print the version of Flask that was installed.
+
+
+### Setting up the Application
+Clone the CharacterCraft repository to your server by running `git clone https://github.com/saberswordboy/charactergenerator.`
+
+
+Navigate to the root directory of the repository.
+
+
+Create a virtual environment by running `python3 -m venv venv`. This will create a new directory called "venv" in the root directory of the repository.
+
+
+Activate the virtual environment by running `source venv/bin/activate`.
+
+
+Install the required packages by running `pip3 install -r packages.txt`.
+
+
+Create a new file named .env and add the following line to it: `API_KEY="YOUR API KEY HERE"`
+
+Run `flask run` to start the server
+
+
+Your CharacterCraft web application should now be running and accessible at the server's IP address on port 80. You may need to check permissions if this does not work, as port 80 requires root permissions. 
 
 ##### *This document partly created using AI*
