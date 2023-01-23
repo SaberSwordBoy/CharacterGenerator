@@ -156,7 +156,6 @@ nav a {
     font-size: .9rem;
     border: 2px solid #fff;
     border-radius: 3px;
-    width: fit-content;
 
 }
 
@@ -200,7 +199,8 @@ nav a:hover {
   .container {
     width: 100%; /* change the width of the container to 80% of the window */
     display: block;
-}
+    }
+
     .description {
         width: 90%;
     }
