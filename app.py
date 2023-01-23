@@ -10,8 +10,12 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 import logging
 from dotenv import load_dotenv
+import datetime
+from csv import writer
 
 load_dotenv()
+
+API_USAGE_FILE = "./data/api_usage.csv"
 
 logging.basicConfig(filename="./logs/visits.log",
         filemode='a',
@@ -63,7 +67,6 @@ class User(db.Model):
         return str(self.id)
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.filter_by(id=user_id).first()
@@ -103,16 +106,37 @@ def generate_value_with_api_call(name):
                                          prompt=f"What {name} should my character have?", max_tokens=15, n=1,
                                          temperature=0.7)
 
+    token_usage = value.usage["total_tokens"]
     print(value.choices[0].text)
+
+    with open(API_USAGE_FILE, "a") as file:
+        writer_obj = writer(file)
+        writer_obj.writerow([datetime.datetime.now(), token_usage, bytes(f"Generated {name}")])
+
     return value.choices[0].text
 
-def generate_random_name():
-    value = openai.Completion.create(engine="text-curie-001",
-                                     prompt=f"Pick a name for my character. ",
-                                     max_tokens=10,
+def generate_random_name(gender: None):
+    if gender:
+        value = openai.Completion.create(engine="text-curie-001",
+                                     prompt=f"Pick a {gender} name for my character",
+                                     max_tokens=5,
                                      n=1,
-                                     temperature=0.8)
-    print("Generated Name: " + value.choices[0].text)
+                                     temperature=0.9)
+    else:
+        value = openai.Completion.create(engine="text-curie-001",
+                                     prompt=f"Pick a name for my character",
+                                     max_tokens=5,
+                                     n=1,
+                                     temperature=0.9)
+
+    #print("Generated Name: " + value.choices[0].text)
+
+    token_usage = value.usage["total_tokens"]
+
+    with open(API_USAGE_FILE, "a") as file:
+        writer_obj = writer(file)
+        writer_obj.writerow([datetime.datetime.now(), token_usage, f"Generated Name {value.choices[0].text}"])
+
     return value.choices[0].text
 
 @app.route("/", methods=["GET", "POST"])
@@ -134,7 +158,10 @@ def index():
         location = request.form["location"]
 
         if not name:
-            name = generate_random_name()
+                if gender:
+                    name = generate_random_name(gender)
+                else:
+                    name = generate_random_name()
 
         # Use GPT-3 to generate a unique character based on the user's input
         prompt = f"Create a detailed description of an original character named {name}. {description}"
@@ -190,6 +217,12 @@ def index():
             prompt += f" The character is from {location}."
 
         completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=200, n=1,stop=None,temperature=0.7)
+
+        token_usage = completions.usage["total_tokens"]
+
+        with open(API_USAGE_FILE, "a") as file:
+            writer_obj = writer(file)
+            writer_obj.writerow([datetime.datetime.now(), token_usage, "Generated Character"])
 
         # Get the generated character
         character = completions.choices[0].text
@@ -291,6 +324,17 @@ def register():
         return redirect(url_for('index'))
 
     return render_template('register.html')
+
+@app.route("/usage")
+def api_usage():
+    csv_data = open("./data/api_usage.csv", "r").read()
+    processed_data = '<br>'.join(csv_data.splitlines())
+
+    with open("./data/old_api_usage.csv", "a+") as file:
+        writerobj = writer(file)
+        writerobj.writerows(csv_data)
+
+    return processed_data
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=False)
