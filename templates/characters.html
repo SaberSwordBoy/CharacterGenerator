@@ -6,7 +6,15 @@
 </head>
 <body>
     {% include 'navigation.html' %}
+
+
     <h1>Characters</h1>
+
+    {% if message %}
+    <h2>
+        Generate some characters! <a href="{{ url_for('generator')}}">Generator</a>
+    </h2>
+    {% endif %}
     <ul>
         {% for character in characters %}
 	<li><a href="{{ url_for('character', id=character.id) }}">{{ character.name }} - {{ character.occupation }}</a></li>

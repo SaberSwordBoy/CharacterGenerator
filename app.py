@@ -1,21 +1,27 @@
 import os
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, session, abort, redirect, url_for
 import openai
 import random
 import pickle
 import uuid
-from flask_login import LoginManager, login_user
-from secrets import compare_digest
-from flask_sqlalchemy import SQLAlchemy
-from werkzeug.security import generate_password_hash
 import logging
 from dotenv import load_dotenv
 import datetime
 from csv import writer
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
+import requests
+
+from google_auth_oauthlib.flow import Flow
 
 load_dotenv()
 
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
 API_USAGE_FILE = "./data/api_usage.csv"
+GOOGLE_CLIENT_ID = "729149519506-3qugjikben2j8ato3um5714rcjgknbrv.apps.googleusercontent.com"
 
 logging.basicConfig(filename="./logs/visits.log",
         filemode='a',
@@ -26,13 +32,7 @@ logging.basicConfig(filename="./logs/visits.log",
 logging.info("Server file started...")
 
 app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(), 'data/users.db')
-
-db = SQLAlchemy(app)
-
-login_manager = LoginManager()
-login_manager.init_app(app)
+app.secret_key = "penis-hat-and-balls"
 
 DAVINCI = 'text-davinci-003'
 CURIE = 'text-curie-001'
@@ -41,38 +41,14 @@ common_eye_colors = ["brown", "blue", "green", "hazel", "gray"]
 uncommon_eye_colors = ["amber", "violet", "black", "red", "pink"]
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(128), nullable=False)
-    active = db.Column(db.Boolean, default=True)
-
-    def __init__(self, username, email, password_hash, active=True):
-        self.username = username
-        self.email = email
-        self.password_hash = password_hash
-        self.active = active
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return self.active
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        return str(self.id)
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.filter_by(id=user_id).first()
-
 # Use the API key from your OpenAI account
 openai.api_key = os.getenv("API_KEY")
+
+client_secrets_file = os.path.join(os.getcwd(), "client_secret.json")
+
+flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
+                                     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
+                                     redirect_uri="http://localhost/redirect")
 
 def generate_value_with_api_call(name):
     #logging.info(f"Generating {name}")
@@ -139,8 +115,22 @@ def generate_random_name(gender: None):
 
     return value.choices[0].text
 
-@app.route("/", methods=["GET", "POST"])
-def index():
+def login_is_required(function):
+    def wrapper(*args, **kwargs):
+        if "google_id" not in session:
+            return abort(401)
+
+        else:
+            return function()
+
+    wrapper.__name__ = function.__name__
+    return wrapper
+
+
+@app.route("/chargen", methods=["GET", "POST"])
+@login_is_required
+def generator():
+
     logging.info(f"{request.remote_addr} {request.method} requested /")
     if request.method == "POST":
         # Get user input for the character's name and description
@@ -262,22 +252,33 @@ def index():
 def character(id):
     #logging.info(f"{request.remote_addr} requested /character/{id}")
     # load the character object from the file
-    with open(f'data/saved_characters/{id}.pickle', 'rb') as f:
+
+    if len(id) != 36:
+        abort(501)
+
+    with open(f'data/saved_characters/{session["google_id"]}/{id}.pickle', 'rb') as f:
         data = pickle.load(f)
     return render_template('character.html', character=data)
 
 
 @app.route('/characters')
+@login_is_required
 def characters():
     #logging.info(f"{request.remote_addr} requested /characters/")
     characters = []
-    for file_name in os.listdir("./data/saved_characters/"):
-
+    user_id = session["google_id"]
+    for file_name in os.listdir(f"./data/saved_characters/{user_id}"):
         if file_name.endswith('.pickle'):
-            with open("./data/saved_characters/" + file_name, 'rb') as f:
+            with open(f"./data/saved_characters/{user_id}/" + file_name, 'rb') as f:
                 characters.append(pickle.load(f))
 
-    return render_template('characters.html', characters=characters)
+    message = False
+    if characters == []:
+        message = True
+
+
+    return render_template('characters.html', characters=characters, message=message)
+
 
 @app.route("/about")
 def about():
@@ -285,56 +286,65 @@ def about():
     return render_template("about.html")
 
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        password_confirm = request.form['password_confirm']
-        email = request.form['email']
-
-        # Check if the username already exists
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
-            flash("That username is already taken. Please choose a different one.")
-            return redirect(url_for('register'))
-
-        # Check if the email already exists
-        existing_email = User.query.filter_by(email=email).first()
-        if existing_email:
-            flash("That email is already taken. Please choose a different one.")
-            return redirect(url_for('register'))
-
-        # Check if the passwords match
-        if compare_digest(password, password_confirm):
-            flash("The passwords do not match.")
-            return redirect(url_for('register'))
-
-        # Hash the password
-        password_hash = generate_password_hash(password)
-
-        # Create a new user and add it to the database
-        new_user = User(username=username, email=email, password_hash=password_hash, active=True)
-        db.session.add(new_user)
-        db.session.commit()
-
-        # Log the user in
-        login_user(new_user)
-
-        return redirect(url_for('index'))
-
-    return render_template('register.html')
-
 @app.route("/usage")
 def api_usage():
     csv_data = open("./data/api_usage.csv", "r").read()
-    processed_data = '<br>'.join(csv_data.splitlines())
 
     with open("./data/old_api_usage.csv", "a+") as file:
         writerobj = writer(file)
         writerobj.writerows(csv_data)
 
     return csv_data
+
+@app.route("/login")
+def login():
+    authorization_url, state = flow.authorization_url()
+    session["state"] = state
+
+    return redirect(authorization_url)
+
+
+@app.route("/redirect")
+def callback():
+    flow.fetch_token(authorization_response=request.url)
+
+    if not session["state"] == request.args["state"]:
+        abort(500)
+
+    credentials = flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session=cached_session)
+
+    id_info = id_token.verify_oauth2_token(
+        id_token=credentials._id_token,
+        request=token_request,
+        audience=GOOGLE_CLIENT_ID
+    )
+
+    session["google_id"] = id_info.get("sub")
+    session["name"] = id_info.get("name")
+    session["email"] = id_info.get("email")
+
+    if not os.path.exists(f"./data/saved_characters/{session['google_id']}"):
+        os.mkdir(f"./data/saved_characters/{session['google_id']}")
+
+    return redirect(url_for("generator"))
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("home"))
+
+@app.route("/profile")
+def profile():
+    return render_template("profile.html", name=session["name"], email=session["email"])
+
+
+@app.route("/")
+def home():
+    return "<a href='/login'><button>Login</button></a>"
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80, debug=False)
