@@ -18,10 +18,11 @@ from google_auth_oauthlib.flow import Flow
 
 load_dotenv()
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+#os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 API_USAGE_FILE = "./data/api_usage.csv"
-GOOGLE_CLIENT_ID = "729149519506-3qugjikben2j8ato3um5714rcjgknbrv.apps.googleusercontent.com"
+
+GOOGLE_CLIENT_ID = "729149519506-komgd331r8p7pjjpcsm3klpa4huqoeb8.apps.googleusercontent.com"
 
 logging.basicConfig(filename="./logs/visits.log",
         filemode='a',
@@ -48,7 +49,8 @@ client_secrets_file = os.path.join(os.getcwd(), "client_secret.json")
 
 flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
                                      scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-                                     redirect_uri="http://localhost/redirect")
+                                     redirect_uri="https://sab3r.ml/redirect",
+                                    )
 
 def generate_value_with_api_call(name):
     #logging.info(f"Generating {name}")
