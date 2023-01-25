@@ -16,6 +16,7 @@ import requests
 
 from google_auth_oauthlib.flow import Flow
 
+<<<<<<< HEAD
 load_dotenv()
 
 #os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -23,12 +24,17 @@ load_dotenv()
 API_USAGE_FILE = "./data/api_usage.csv"
 
 GOOGLE_CLIENT_ID = "729149519506-komgd331r8p7pjjpcsm3klpa4huqoeb8.apps.googleusercontent.com"
+=======
+from config import *
+
+load_dotenv()
+>>>>>>> 9623120fa03ccb4c7680a86b3414a4e700c6bd05
 
 logging.basicConfig(filename="./logs/visits.log",
-        filemode='a',
-        format='%(asctime)s,$(msecs)d %(name)s %(levelname)s %(message)s',
-        datefmt='%H:%M:%S',
-        level=logging.DEBUG)
+                    filemode='a',
+                    format='%(asctime)s,$(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
 
 logging.info("Server file started...")
 
@@ -41,44 +47,53 @@ CURIE = 'text-curie-001'
 common_eye_colors = ["brown", "blue", "green", "hazel", "gray"]
 uncommon_eye_colors = ["amber", "violet", "black", "red", "pink"]
 
-
 # Use the API key from your OpenAI account
 openai.api_key = os.getenv("API_KEY")
 
 client_secrets_file = os.path.join(os.getcwd(), "client_secret.json")
 
 flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
+<<<<<<< HEAD
                                      scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
                                      redirect_uri="https://sab3r.ml/redirect",
                                     )
+=======
+                                     scopes=["https://www.googleapis.com/auth/userinfo.profile",
+                                             "https://www.googleapis.com/auth/userinfo.email", "openid"],
+                                     redirect_uri=REDIRECT_URI)
+
+>>>>>>> 9623120fa03ccb4c7680a86b3414a4e700c6bd05
 
 def generate_value_with_api_call(name):
-    #logging.info(f"Generating {name}")
+    # logging.info(f"Generating {name}")
     if name == "weight":
-        return random.randint(90,200)
+        return random.randint(90, 200)
 
     elif name == "height":
         value = openai.Completion.create(engine=DAVINCI,
-                                         prompt="Choose a height in feet for my character.",max_tokens=7,n=1,temperature=0.7)
+                                         prompt="Choose a height in feet for my character.", max_tokens=7, n=1,
+                                         temperature=0.7)
     elif name == "occupation":
         value = openai.Completion.create(engine=DAVINCI,
-                                         prompt="Give me ONE job or occupation",max_tokens=15,n=1,temperature=0.7)
+                                         prompt="Give me ONE job or occupation", max_tokens=15, n=1, temperature=0.7)
     elif name == "location":
         value = openai.Completion.create(engine=DAVINCI,
-                                         prompt="Generate a place that a person could live. ",max_tokens=20,n=1,temperature=0.7)
+                                         prompt="Generate a place that a person could live. ", max_tokens=20, n=1,
+                                         temperature=0.7)
     elif name == "age":
         value = openai.Completion.create(engine=CURIE,
-                                         prompt="Pick a random age (in years) for my character",max_tokens=3,n=1,temperature=0.5)
+                                         prompt="Pick a random age (in years) for my character", max_tokens=3, n=1,
+                                         temperature=0.5)
     elif name == "eye_color":
-        value = random.choice(common_eye_colors) if random.randint(1,10) < 7 else random.choice(uncommon_eye_colors)
+        value = random.choice(common_eye_colors) if random.randint(1, 10) < 7 else random.choice(uncommon_eye_colors)
         return value
 
     elif name == "hair_color":
         value = openai.Completion.create(engine=CURIE,
-                                         prompt=f"Give me one hair color. ",max_tokens=4,n=1,temperature=0.7)
+                                         prompt=f"Give me one hair color. ", max_tokens=4, n=1, temperature=0.7)
     elif name == "gender":
         value = openai.Completion.create(engine=CURIE,
-                                         prompt=f"Pick a gender for my character",max_tokens=2,n=1,temperature=0.4)
+                                         prompt=f"Pick a gender for my character", max_tokens=2, n=1, temperature=0.4)
     else:
         value = openai.Completion.create(engine=DAVINCI,
                                          prompt=f"What {name} should my character have?", max_tokens=15, n=1,
@@ -93,21 +108,22 @@ def generate_value_with_api_call(name):
 
     return value.choices[0].text
 
+
 def generate_random_name(gender: None):
     if gender:
         value = openai.Completion.create(engine="text-curie-001",
-                                     prompt=f"Pick a {gender} name for my character",
-                                     max_tokens=5,
-                                     n=1,
-                                     temperature=0.9)
+                                         prompt=f"Pick a {gender} name for my character",
+                                         max_tokens=5,
+                                         n=1,
+                                         temperature=0.9)
     else:
         value = openai.Completion.create(engine="text-curie-001",
-                                     prompt=f"Pick a name for my character",
-                                     max_tokens=5,
-                                     n=1,
-                                     temperature=0.9)
+                                         prompt=f"Pick a name for my character",
+                                         max_tokens=5,
+                                         n=1,
+                                         temperature=0.9)
 
-    #print("Generated Name: " + value.choices[0].text)
+    # print("Generated Name: " + value.choices[0].text)
 
     token_usage = value.usage["total_tokens"]
 
@@ -116,6 +132,7 @@ def generate_random_name(gender: None):
         writer_obj.writerow([datetime.datetime.now(), token_usage, f"Generated Name {value.choices[0].text}"])
 
     return value.choices[0].text
+
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
@@ -132,7 +149,6 @@ def login_is_required(function):
 @app.route("/chargen", methods=["GET", "POST"])
 @login_is_required
 def generator():
-
     logging.info(f"{request.remote_addr} {request.method} requested /")
     if request.method == "POST":
         # Get user input for the character's name and description
@@ -150,10 +166,10 @@ def generator():
         location = request.form["location"]
 
         if not name:
-                if gender:
-                    name = generate_random_name(gender)
-                else:
-                    name = generate_random_name()
+            if gender:
+                name = generate_random_name(gender)
+            else:
+                name = generate_random_name()
 
         # Use GPT-3 to generate a unique character based on the user's input
         prompt = f"Create a detailed description of an original character named {name}. {description}"
@@ -208,7 +224,8 @@ def generator():
             location = generate_value_with_api_call("location")
             prompt += f" The character is from {location}."
 
-        completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=200, n=1,stop=None,temperature=0.7)
+        completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=200, n=1, stop=None,
+                                               temperature=0.7)
 
         token_usage = completions.usage["total_tokens"]
 
@@ -247,12 +264,12 @@ def generator():
                                id=character_id,
                                occupation=occupation)
 
-    return render_template("index.html")
+    return render_template("generator.html")
 
 
 @app.route('/character/<id>')
 def character(id):
-    #logging.info(f"{request.remote_addr} requested /character/{id}")
+    # logging.info(f"{request.remote_addr} requested /character/{id}")
     # load the character object from the file
 
     if len(id) != 36:
@@ -266,7 +283,7 @@ def character(id):
 @app.route('/characters')
 @login_is_required
 def characters():
-    #logging.info(f"{request.remote_addr} requested /characters/")
+    # logging.info(f"{request.remote_addr} requested /characters/")
     characters = []
     user_id = session["google_id"]
     for file_name in os.listdir(f"./data/saved_characters/{user_id}"):
@@ -275,16 +292,15 @@ def characters():
                 characters.append(pickle.load(f))
 
     message = False
-    if characters == []:
+    if not characters:
         message = True
-
 
     return render_template('characters.html', characters=characters, message=message)
 
 
 @app.route("/about")
 def about():
-    #logging.info(f"{request.remote_addr} requested /about/")
+    # logging.info(f"{request.remote_addr} requested /about/")
     return render_template("about.html")
 
 
@@ -297,6 +313,7 @@ def api_usage():
         writerobj.writerows(csv_data)
 
     return csv_data
+
 
 @app.route("/login")
 def login():
@@ -331,6 +348,10 @@ def callback():
     if not os.path.exists(f"./data/saved_characters/{session['google_id']}"):
         os.mkdir(f"./data/saved_characters/{session['google_id']}")
 
+        with open("./data/users.csv", "a") as file:
+            writer_obj = writer(file)
+            writer_obj.writerow([datetime.datetime.now(), session["name"], session["email"]])
+
     return redirect(url_for("generator"))
 
 
@@ -339,6 +360,7 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
+
 @app.route("/profile")
 def profile():
     return render_template("profile.html", name=session["name"], email=session["email"])
@@ -346,7 +368,11 @@ def profile():
 
 @app.route("/")
 def home():
-    return "<a href='/login'><button>Login</button></a>"
+    if "google_id" not in session:
+        return render_template("index.html")
+
+    return redirect(url_for("generator"))
+
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80, debug=False)
+    app.run(host=HOST, port=PORT, debug=DEBUG)

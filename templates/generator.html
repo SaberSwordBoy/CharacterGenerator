@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home | CharacterCraft</title>
+        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}">
+    </head>
+    <body>
+       {% include 'navigation.html' %}
+        <h1>Character Generator</h1>
+        <div class="container">
+            <div class="description">
+                    <p>Welcome to CharacterCraft, your ultimate destination for creating unique and original characters.
+                        Our platform utilizes the power of OpenAI's GPT-3 model to bring your imagination to life.
+                        Whether you're a writer looking for inspiration or a roleplayer in search of the perfect character, CharacterCraft has you covered.
+                        With a wide range of options to customize your character including gender, age, occupation, height, hair color, and more, the possibilities are endless.
+                        Create, save, and share your characters with our user-friendly interface.<br>
+                        Start crafting your next character masterpiece!</p>
+                </div>
+            <div class="description">
+                <form method="post" action=".">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Leave blank for AI to generate!">
+                    <br>
+                    <br>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" required placeholder="Description is required"></textarea>
+                    <br>
+                    <br>
+                    <label for="gender">Gender:</label>
+                    <input type="text" id="gender" name="gender">
+                    <br>
+                    <br>
+                    <label for="age">Age:</label>
+                    <input type="text" id="age" name="age">
+                    <br>
+                    <br>
+                    <label for="occupation">Occupation:</label>
+                    <input type="text" id="occupation" name="occupation">
+                    <br>
+                    <br>
+                    <label for="height">Height:</label>
+                    <input type="text" id="height" name="height">
+                    <br>
+                    <br>
+                    <label for="hair_color">Hair Color:</label>
+                    <input type="text" id="hair_color" name="hair_color">
+                    <br>
+                    <br>
+                    <label for="eye_color">Eye Color:</label>
+                    <input type="text" id="eye_color" name="eye_color">
+                    <br>
+                    <br>
+                    <label for="weight">Weight:</label>
+                    <input type="text" id="weight" name="weight">
+                    <br>
+                    <br>
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" placeholder="e.g. Mars, Hawaii, NYC">
+                    <br>
+                    <br>
+                    <input type="submit" value="Generate Character">
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

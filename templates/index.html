@@ -1,66 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Home | CharacterCraft</title>
-        <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}">
-    </head>
-    <body>
-       {% include 'navigation.html' %}
-        <h1>Character Generator</h1>
-        <div class="container">
-            <div class="description">
-                    <p>Welcome to CharacterCraft, your ultimate destination for creating unique and original characters.
-                        Our platform utilizes the power of OpenAI's GPT-3 model to bring your imagination to life.
-                        Whether you're a writer looking for inspiration or a roleplayer in search of the perfect character, CharacterCraft has you covered.
-                        With a wide range of options to customize your character including gender, age, occupation, height, hair color, and more, the possibilities are endless.
-                        Create, save, and share your characters with our user-friendly interface.<br>
-                        Start crafting your next character masterpiece!</p>
-                </div>
-            <div class="description">
-                <form method="post" action=".">
-                    <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" placeholder="Leave blank for AI to generate!">
-                    <br>
-                    <br>
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description" required placeholder="Description is required"></textarea>
-                    <br>
-                    <br>
-                    <label for="gender">Gender:</label>
-                    <input type="text" id="gender" name="gender">
-                    <br>
-                    <br>
-                    <label for="age">Age:</label>
-                    <input type="text" id="age" name="age">
-                    <br>
-                    <br>
-                    <label for="occupation">Occupation:</label>
-                    <input type="text" id="occupation" name="occupation">
-                    <br>
-                    <br>
-                    <label for="height">Height:</label>
-                    <input type="text" id="height" name="height">
-                    <br>
-                    <br>
-                    <label for="hair_color">Hair Color:</label>
-                    <input type="text" id="hair_color" name="hair_color">
-                    <br>
-                    <br>
-                    <label for="eye_color">Eye Color:</label>
-                    <input type="text" id="eye_color" name="eye_color">
-                    <br>
-                    <br>
-                    <label for="weight">Weight:</label>
-                    <input type="text" id="weight" name="weight">
-                    <br>
-                    <br>
-                    <label for="location">Location:</label>
-                    <input type="text" id="location" name="location" placeholder="e.g. Mars, Hawaii, NYC">
-                    <br>
-                    <br>
-                    <input type="submit" value="Generate Character">
-                </form>
-            </div>
-        </div>
-    </body>
+<html>
+<head>
+    <title>CharacterCraft - Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="apple-touch-icon" sizes="180x180"
+          href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+          href="{{ url_for('static', filename='favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+          href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+    <style>
+        body {
+            font-family: Consolas, Arial;
+            background-color: #fcffd7;
+        }
+
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+
+            background-image: url("{{ url_for('static', filename='background.png') }}");
+
+        }
+
+        .login-content {
+            text-align: center;
+            width: 60%;
+            background-color: rgba(255, 234, 198, 0.81);
+            padding: 2rem;
+            border-radius: 1rem;
+            color: #1d1100;
+        }
+
+        .login-content h1 {
+            margin-bottom: 1rem;
+        }
+
+        .login-content p {
+            margin-bottom: 2rem;
+            background-color: rgba(255,255,255,0)
+        }
+
+        .login-content a {
+            text-decoration: none;
+            color: white;
+            background-color: #4285F4;
+        }
+
+
+        .google-btn {
+            padding: 0.5rem 1rem;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .login-content {
+                width: 95%;
+                font-size: 200%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="login-content">
+        <h1>CharacterCraft</h1>
+        <p>Welcome to CharacterCraft, the ultimate tool for creating unique and detailed characters for your stories,
+            games, and more.
+            With our user-friendly interface and powerful AI technology, the possibilities are endless.</p>
+
+        <button class="google-btn"><a href="{{ url_for("login") }}">Login with Google</a></button>
+    </div>
+</div>
+</body>
 </html>
