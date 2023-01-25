@@ -1,7 +1,24 @@
 /* change the font and text color for the entire website */
+
+:root {
+	/* CSS HEX */
+	--linen: #000000ff;
+	--raw-sienna: #c08552ff;
+	--black: #000000ff;
+	--mystic: #d65780ff;
+	--emerald: #32936fff;
+
+}
 body {
-    color: #333333;
-    font-family: Consolas, Arial;
+	color: var(--black);
+	font-family: Consolas, Arial;
+	background-color: var(--linen);
+	background-image: url("../background.jpg");
+	
+	font-weight: bold;
+	background-size: cover;
+	background-position: center;
+	background-repeat: repeat-y;
 }
 
 /* center and style the title */
@@ -10,7 +27,7 @@ h1, h2{
     font-size: 2rem;
     font-weight: bold;
     margin: 2rem 0;
-    color: #38264a;
+    color: var(--black);
 }
 
 /* style the container */
@@ -41,21 +58,27 @@ form label {
     margin-bottom: auto;
     display: inline-block;
     width: fit-content;
+	
+	display: flex;
+        width: 40%;
 }
 form input[type="text"], form textarea {
-    width: 80%;
-    padding: 0.5rem;
-    border-radius: 5px;
-    border-color: #0000FF;
-    background-color: #f5f5f5;
+	width: 50%;
+	padding: 0.5rem;
+	border-radius: 5px;
+	border-color: #0000FF;
+	background-color: #f5f5f5;
+	margin-top: auto;
+	margin-bottom: auto;
+}
 
-    margin-top: auto;
-    margin-bottom: auto;
+form textarea {
+	height: 300%;
 }
 
 /* style the submit button */
 form input[type="submit"] {
-    background-color: #00008B;
+    background-color: var(--mystic);
     color: #f5f5f5;
     padding: 0.5rem 1rem;
     border: none;
@@ -64,15 +87,15 @@ form input[type="submit"] {
     width: 70%;
     margin-top: 1rem;
     border-radius: 5px;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 form input[type="submit"]:hover {
-    background-color: #7777f0;
+    background-color: var(--emerald);
 }
 
 /* style the description */
 .description {
-    width: 30%; /* change the width of the description to 18% of the container */
+    width: 60%; /* change the width of the description to 18% of the container */
     padding: 1rem;
     flex: 1;
 }
@@ -87,17 +110,17 @@ form input[type="submit"]:hover {
 }
 
 p {
-    font-size: 1.2rem;
-    margin: 1rem 0;
-    padding: 0.5rem;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    width: 100%;
+	font-size: 1.2rem;
+	margin: 1rem 0;
+	padding: 0.5rem;
+	background-color: var(--raw-sienna);
+	border-radius: 17px;
+	width: 100%;
 }
 
 /* Style the character's ID */
 p:first-child {
-    background-color: #e5e5e5;
+    background-color: var(--raw-sienna);
     font-weight: bold;
 }
 
@@ -196,7 +219,7 @@ nav a:hover {
 @media only screen and (max-width: 600px) {
   .container {
     width: 100%; /* change the width of the container to 80% of the window */
-    display: block;
+    display: grid;
     }
 
     .description {
@@ -207,6 +230,14 @@ nav a:hover {
         display: flex;
         width: 40%;
     }
+	p {
+	font-size: 1.6rem;
+	margin: 1rem 0;
+	padding: 0.5rem;
+	background-color: var(--raw-sienna);
+	border-radius: 17px;
+	width: 100%;
+}
 }
 
 @media only screen and (max-width: 1100px) {

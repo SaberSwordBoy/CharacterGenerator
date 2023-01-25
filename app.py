@@ -311,6 +311,8 @@ def login():
 def callback():
     flow.fetch_token(authorization_response=request.url)
 
+    print(session["state"], request.args["state"])
+
     if not session["state"] == request.args["state"]:
         abort(500)
 

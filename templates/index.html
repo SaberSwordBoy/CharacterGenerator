@@ -13,6 +13,7 @@
     <style>
         body {
             font-family: Consolas, Arial;
+			font-weight: bold;
             background-color: #fcffd7;
         }
 
@@ -23,8 +24,9 @@
             height: 100vh;
             background-size: cover;
             background-position: center;
-
+			
             background-image: url("{{ url_for('static', filename='background.png') }}");
+			background-image: url("../static/background.png");
 
         }
 
