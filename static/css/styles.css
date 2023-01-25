@@ -1,69 +1,71 @@
-/* change the font and text color for the entire website */
-
-:root {
-	/* CSS HEX */
-	--linen: #000000ff;
-	--raw-sienna: #c08552ff;
-	--black: #000000ff;
-	--mystic: #d65780ff;
-	--emerald: #32936fff;
-
+/* change the font and text color for the entire website */ :root {
+  /* CSS HEX */
+  --linen: #000000ff;
+  --raw-sienna: #f7846f;
+  --black: #000000ff;
+  --mystic: #d65780ff;
+  --emerald: #32936fff;
 }
 body {
 	color: var(--black);
 	font-family: Consolas, Arial;
-	background-color: var(--linen);
-	background-image: url("../background.jpg");
-	
+	background-color: rgba(231,231,231,0.70);
 	font-weight: bold;
 	background-size: cover;
 	background-position: center;
 	background-repeat: repeat-y;
+	border-radius: 9px;
+	-webkit-box-shadow: 6px 15px 10px -84px #4A4A4A;
+	box-shadow: 6px 15px 10px -84px #4A4A4A;
+	align-items: center;
 }
-
 /* center and style the title */
-h1, h2{
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 2rem 0;
-    color: var(--black);
+h1, h2 {
+	text-align: center;
+	font-size: 2rem;
+	font-weight: bold;
+	margin: 2rem 0;
+	color: var(--black);
+	-webkit-box-shadow: 5px 5px 13px 3px #2F2F2F;
+	box-shadow: 5px 5px 13px 3px #2F2F2F;
+	width: 100%;
+	top: auto;
+	align-content: center;
+	align-items: center;
+	
 }
-
 /* style the container */
 .container {
-    width: 90%; /* change the width of the container to 80% of the window */
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
+  width: 90%; /* change the width of the container to 80% of the window */
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
 }
-
 /* style the form inputs and labels */
 form {
-    width: 100%; /* change the width of the form to 100% of the container */
-    margin-right: 3%;
-    padding: 1rem;
-    flex: 2;
-
-    display: flex; /* use flex layout for the form */
-    flex-wrap: wrap; /* allow elements to wrap to the next line if needed */
+  width: 100%; /* change the width of the form to 100% of the container */
+  margin-right: 3%;
+  padding: 1rem;
+  flex: 2;
+  text-align: right;
+  display: flex; /* use flex layout for the form */
+  flex-wrap: wrap; /* allow elements to wrap to the next line if needed */
 }
 form label {
-    font-size: 1.2rem;
-    /*width: 20%; /* make the label take up 20% of the width of the form */
-    text-align: left; /* align the text to the right */
-    padding-right: 1rem;
-    align-self: center; /* center the label vertically */
-    margin-top: auto;
-    margin-bottom: auto;
-    display: inline-block;
-    width: fit-content;
-	
-	display: flex;
-        width: 40%;
+  font-size: 1.2rem;
+  /*width: 20%; /* make the label take up 20% of the width of the form */
+  text-align: right; /* align the text to the right */
+  padding-right: 1rem;
+  align-self: center; /* center the label vertically */
+  margin-top: auto;
+  margin-bottom: auto;
+  display: inline-block;
+  width: fit-content;
+  display: flex;
+  width: 40%;
 }
 form input[type="text"], form textarea {
-	width: 50%;
+	width: 180%;
 	padding: 0.5rem;
 	border-radius: 5px;
 	border-color: #0000FF;
@@ -71,184 +73,184 @@ form input[type="text"], form textarea {
 	margin-top: auto;
 	margin-bottom: auto;
 }
-
 form textarea {
-	height: 300%;
+  height: 300%;
 }
-
 /* style the submit button */
 form input[type="submit"] {
-    background-color: var(--mystic);
-    color: #f5f5f5;
-    padding: 0.5rem 1rem;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 70%;
-    margin-top: 1rem;
-    border-radius: 5px;
-    transition: all 0.2s ease-in-out;
+	background-color: var(--mystic);
+	color: #f5f5f5;
+	padding: 0.5rem 1rem;
+	border: none;
+	font-size: 1rem;
+	cursor: pointer;
+	width: 100%;
+	margin-top: 1rem;
+	border-radius: 5px;
+	transition: all 0.2s ease-in-out;
+	-webkit-box-shadow: 4px 5px 13px 3px #3E3E3E;
+	box-shadow: 4px 5px 13px 3px #3E3E3E;
 }
 form input[type="submit"]:hover {
-    background-color: var(--emerald);
-}
-
-/* style the description */
-.description {
-    width: 60%; /* change the width of the description to 18% of the container */
-    padding: 1rem;
-    flex: 1;
-}
-
-/* style the output */
-.output {
-    width: 90%; /* change the width of the output to 100% of the container */
-    padding: 1rem;
-    background-color: #f5f5f5;
-    border-radius: 5px;
-    margin-top: 2rem;
-}
-
-p {
-	font-size: 1.2rem;
-	margin: 1rem 0;
-	padding: 0.5rem;
-	background-color: var(--raw-sienna);
-	border-radius: 17px;
+	background-color: var(--emerald);
 	width: 100%;
 }
-
+/* style the description */
+.description {
+  width: 60%; /* change the width of the description to 18% of the container */
+  padding: 1rem;
+  flex: 1;
+}
+.chargen {
+	width: 85%; /* change the width of the description to 18% of the container */
+	padding: 1rem;
+	flex: 1;
+}
+/* style the output */
+.output {
+  width: 90%; /* change the width of the output to 100% of the container */
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  margin-top: 2rem;
+}
+p {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  background-color: var(--raw-sienna);
+  border-radius: 17px;
+  width: 100%;
+}
 /* Style the character's ID */
 p:first-child {
-    background-color: var(--raw-sienna);
-    font-weight: bold;
+	background-color: var(--raw-sienna);
+	font-weight: bold;
+	margin-right: 22px;
 }
-
 ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0 auto;
-    justify-content: center;
-    text-align: center;
+  list-style-type: none;
+  padding: 0;
+  margin: 0 auto;
+  justify-content: center;
+  text-align: center;
 }
-
 li {
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    background-color: #f9f9f9;
-    border-radius: 5px;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background-color: #f9f9f9;
+  border-radius: 5px;
 }
-
 a {
-    text-decoration: none;
-    color: #faffff;
-    font-size: 1.2rem;
-    background-color: #3f3f79;
-
-    padding: 0.5rem 1rem;
-    border: none;
-    cursor: pointer;
-    width: 70%;
-    margin-top: 1rem;
-    border-radius: 5px;
-    transition: all 0.2s ease-in-out;
+  text-decoration: none;
+  color: #faffff;
+  font-size: 1.2rem;
+  background-color: var(--mystic);
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  width: 70%;
+  margin-top: 1rem;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
 }
-
 nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.2rem;
-    background-color: #333;
-    color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2rem;
+  background-color: var(--raw-sienna);
+  color: #fff;
 }
-
 nav a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100px;
-    height: 50px;
-    margin: 0.4rem;
-    padding: 0.4rem;
-    color: #fff;
-    text-decoration: none;
-    font-size: .9rem;
-    border: 2px solid #fff;
-    border-radius: 3px;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100px;
+  height: 50px;
+  margin: 0.4rem;
+  padding: 0.4rem;
+  color: #fff;
+  text-decoration: none;
+  font-size: .9rem;
+  border: 2px solid #fff;
+  border-radius: 3px;
 }
-
 nav a:hover {
-    color: #333;
-    background-color: #fff;
+  color: #333;
+  background-color: #fff;
 }
-
 #character-container {
-    width: 80%;
-    margin: 0 auto;
+  width: 80%;
+  margin: 0 auto;
 }
-
 #character-name {
-    text-align: center;
-    font-size: 2.5em;
+  text-align: center;
+  font-size: 2.5em;
 }
-
 #character-details {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
-
 #character-detail-block {
-    width: 30%;
-    padding: 10px;
-    margin: 10px;
-    background-color: #f2f2f2;
-    border-radius: 10px;
+  width: 30%;
+  padding: 10px;
+  margin: 10px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
 }
-
 #character-description {
-    width: 80%;
-    margin: 20px auto;
-    padding: 10px;
-    background-color: #f2f2f2;
-    border-radius: 10px;
+  width: 80%;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #f2f2f2;
+  border-radius: 10px;
 }
-
 @media only screen and (max-width: 600px) {
   .container {
     width: 100%; /* change the width of the container to 80% of the window */
     display: grid;
-    }
-
-    .description {
-        width: 90%;
-    }
-
-    form label {
-        display: flex;
-        width: 40%;
-    }
-	p {
+	  grid-template-columns: 1;
+	  
+    gap: 10px;
+	  align-content: center;
+	  align-items: center;
+  }
+  .description {
+    width: 100%;
+	  grid-column: 1;
+	  grid-row: 1;
+  }
+	
+	.chargen {
+		grid-column: 1;
+	  grid-row: 2;
+	}
+	
+  form label {
+    display: flex;
+    width: 90%;
+  }
+	
+  p {
 	font-size: 1.6rem;
 	margin: 1rem 0;
-	padding: 0.5rem;
 	background-color: var(--raw-sienna);
 	border-radius: 17px;
-	width: 100%;
+	width: 180%;
+	-webkit-box-shadow: 5px 5px 13px 3px #2F2F2F;
+  }
 }
-}
-
 @media only screen and (max-width: 1100px) {
-    .container {
-        width: 90%;
-    }
-    .description {
-        width: 50%;
-    }
-    form label {
-        display: flex;
-        width: 40%;
-    }
+  .container {
+    width: 90%;
+  }
+  .description {
+    width: 50%;
+  }
+  form label {
+	display: flex;
+	width: 269%;
+  }
 }
