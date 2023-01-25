@@ -16,12 +16,9 @@ import requests
 
 from google_auth_oauthlib.flow import Flow
 
+from config import *
+
 load_dotenv()
-
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
-API_USAGE_FILE = "./data/api_usage.csv"
-GOOGLE_CLIENT_ID = "729149519506-3qugjikben2j8ato3um5714rcjgknbrv.apps.googleusercontent.com"
 
 logging.basicConfig(filename="./logs/visits.log",
                     filemode='a',
@@ -48,7 +45,7 @@ client_secrets_file = os.path.join(os.getcwd(), "client_secret.json")
 flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
                                      scopes=["https://www.googleapis.com/auth/userinfo.profile",
                                              "https://www.googleapis.com/auth/userinfo.email", "openid"],
-                                     redirect_uri="http://localhost/redirect")
+                                     redirect_uri=REDIRECT_URI)
 
 
 def generate_value_with_api_call(name):
@@ -279,7 +276,7 @@ def characters():
                 characters.append(pickle.load(f))
 
     message = False
-    if characters == []:
+    if not characters:
         message = True
 
     return render_template('characters.html', characters=characters, message=message)
@@ -362,4 +359,4 @@ def home():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=80, debug=False)
+    app.run(host=HOST, port=PORT, debug=DEBUG)
