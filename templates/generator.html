@@ -18,7 +18,7 @@
                         Start crafting your next character masterpiece!</p>
                 </div>
             <div class="chargen">
-                <form method="post" action=".">
+                <form method="post" action="{{ url_for('generator') }}">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" placeholder="Leave blank for AI to generate!">
                     <br>
@@ -49,7 +49,7 @@
                     <label for="location">Location:</label>
                     <input type="text" id="location" name="location" placeholder="e.g. Mars, Hawaii, NYC">
                     <br>
-                    <input type="submit" value="Generate Character">
+                    <input type="submit" value="Generate Character!">
                 </form>
             </div>
         </div>
