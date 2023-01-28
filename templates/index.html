@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CharacterCraft - Login</title>
+    <title>Login | CharacterWizard</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="apple-touch-icon" sizes="180x180"
           href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
@@ -10,6 +10,10 @@
     <link rel="icon" type="image/png" sizes="16x16"
           href="{{ url_for('static', filename='favicon/favicon-16x16.png') }}">
     <link rel="manifest" href="{{ url_for('static', filename='favicon/site.webmanifest') }}">
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7876122997838409"
+        crossorigin="anonymous"></script>
+
     <style>
         body {
             font-family: Consolas, Arial;
@@ -51,13 +55,23 @@
         .login-content a {
             text-decoration: none;
             color: white;
-            background-color: #4285F4;
+            background-color: rgba(255, 234, 198, 0);
         }
-
 
         .google-btn {
             padding: 0.5rem 1rem;
             background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .discord-btn {
+            padding: 0.5rem 1rem;
+            background-color: #7289da;
             color: white;
             border: none;
             border-radius: 0.5rem;
@@ -77,12 +91,15 @@
 <body>
 <div class="login-container">
     <div class="login-content">
-        <h1>CharacterCraft</h1>
-        <p>Welcome to CharacterCraft, the ultimate tool for creating unique and detailed characters for your stories,
-            games, and more.
-            With our user-friendly interface and powerful AI technology, the possibilities are endless.</p>
+        <h1>CharacterWizard</h1>
+        <p>Welcome to CharacterWizard, the premier destination for character generation and customization. Our state-of-the-art
+        technology, powered by OpenAI, allows you to create unique and detailed characters for your stories, games, and
+        role-playing sessions. With a user-friendly interface and a wide range of customization options, CharacterWizard is
+        the perfect tool for writers, gamers, and creative minds everywhere. Whether you're a seasoned veteran or a first-time
+        user, our site is designed to make character creation quick, easy, and fun. So come on in and start creating today!</p>
 
-        <button class="google-btn"><a href="{{ url_for("login") }}">Login with Google</a></button>
+        <button class="google-btn"><a href="{{ url_for("login") }}">Continue with Google</a></button>
+        <button class="discord-btn"><a href="{{ url_for("discord_login") }}">Login with Discord</a></button>
     </div>
 </div>
 </body>

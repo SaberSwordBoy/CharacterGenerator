@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Profile | CharacterCraft</title>
+    <title>My Profile | CharacterWizard</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="apple-touch-icon" sizes="180x180"
@@ -62,6 +62,7 @@
     <div class="user-info">
         <p>Name: {{ name }}</p>
         <p>Email: {{ email }}</p>
+        <p>Id: {{ id }}</p>
     </div>
 
     <form action="{{ url_for("logout") }}" method="get">

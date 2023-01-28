@@ -1,5 +1,8 @@
 import os
-from flask import Flask, render_template, request, session, abort, redirect, url_for
+
+from flask import Flask, render_template, request, session, abort, redirect, url_for, jsonify
+from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
+
 import openai
 import random
 import pickle
@@ -16,19 +19,9 @@ import requests
 
 from google_auth_oauthlib.flow import Flow
 
-<<<<<<< HEAD
 load_dotenv()
 
-#os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
-API_USAGE_FILE = "./data/api_usage.csv"
-
-GOOGLE_CLIENT_ID = "729149519506-komgd331r8p7pjjpcsm3klpa4huqoeb8.apps.googleusercontent.com"
-=======
 from config import *
-
-load_dotenv()
->>>>>>> 9623120fa03ccb4c7680a86b3414a4e700c6bd05
 
 logging.basicConfig(filename="./logs/visits.log",
                     filemode='a',
@@ -40,6 +33,13 @@ logging.info("Server file started...")
 
 app = Flask(__name__)
 app.secret_key = "penis-hat-and-balls"
+
+app.config["DISCORD_CLIENT_ID"] = 1068186999200174221    
+app.config["DISCORD_CLIENT_SECRET"] = "KlvxG-qe7CrFCm1eOuxF8iw3kQ4xo81B"                
+app.config["DISCORD_REDIRECT_URI"] = "https://sab3r.ml/discordredirect"                
+app.config["DISCORD_BOT_TOKEN"] = "MTA2ODE4Njk5OTIwMDE3NDIyMQ.G5E_Tj.4M3pLLhmI416-wMiMr8SJZjegHLy_2noNMV8ac"
+
+discord = DiscordOAuth2Session(app)
 
 DAVINCI = 'text-davinci-003'
 CURIE = 'text-curie-001'
@@ -53,16 +53,14 @@ openai.api_key = os.getenv("API_KEY")
 client_secrets_file = os.path.join(os.getcwd(), "client_secret.json")
 
 flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
-<<<<<<< HEAD
-                                     scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-                                     redirect_uri="https://sab3r.ml/redirect",
-                                    )
-=======
                                      scopes=["https://www.googleapis.com/auth/userinfo.profile",
                                              "https://www.googleapis.com/auth/userinfo.email", "openid"],
                                      redirect_uri=REDIRECT_URI)
 
->>>>>>> 9623120fa03ccb4c7680a86b3414a4e700c6bd05
+@app.errorhandler(Unauthorized)
+def redirect_unauthorized(e):
+    return redirect(url_for("login"))
+
 
 def generate_value_with_api_call(name):
     # logging.info(f"Generating {name}")
@@ -109,7 +107,7 @@ def generate_value_with_api_call(name):
     return value.choices[0].text
 
 
-def generate_random_name(gender: None):
+def generate_random_name(gender=None):
     if gender:
         value = openai.Completion.create(engine="text-curie-001",
                                          prompt=f"Pick a {gender} name for my character",
@@ -136,8 +134,9 @@ def generate_random_name(gender: None):
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
-        if "google_id" not in session:
-            return abort(401)
+        if "discord_id" not in session:
+            if "google_id" not in session:
+                return abort(401)
 
         else:
             return function()
@@ -237,8 +236,10 @@ def generator():
         character = completions.choices[0].text
 
         character_id = str(uuid.uuid4())
+        user_id = discord.fetch_user().id if "discord_id" in session else session["google_id"]
+
         # save the character object with the unique ID to a file
-        with open(f'data/saved_characters/{character_id}.pickle', 'wb') as f:
+        with open(f'data/saved_characters/{user_id}/{character_id}.pickle', 'wb') as f:
             pickle.dump(
                 {"desc": character,
                  "name": name,
@@ -267,17 +268,20 @@ def generator():
     return render_template("generator.html")
 
 
-@app.route('/character/<id>')
+@app.route('/character/<id>', methods=['GET', 'POST'])
 def character(id):
-    # logging.info(f"{request.remote_addr} requested /character/{id}")
-    # load the character object from the file
+    if request.method == 'GET':
+        if len(id) != 36:
+            abort(501)
 
-    if len(id) != 36:
-        abort(501)
-
-    with open(f'data/saved_characters/{session["google_id"]}/{id}.pickle', 'rb') as f:
-        data = pickle.load(f)
-    return render_template('character.html', character=data)
+        user_id = discord.fetch_user().id if "discord_id" in session else session["google_id"]
+        with open(f'data/saved_characters/{user_id}/{id}.pickle', 'rb') as f:
+            data = pickle.load(f)
+        
+        return render_template('character.html', character=data)
+    
+    if request.method == 'POST':
+        return "idk something coming soon ig"
 
 
 @app.route('/characters')
@@ -285,7 +289,11 @@ def character(id):
 def characters():
     # logging.info(f"{request.remote_addr} requested /characters/")
     characters = []
-    user_id = session["google_id"]
+    try:
+        user_id = session["google_id"]
+    except KeyError:
+        user_id = session["discord_id"]
+    
     for file_name in os.listdir(f"./data/saved_characters/{user_id}"):
         if file_name.endswith('.pickle'):
             with open(f"./data/saved_characters/{user_id}/" + file_name, 'rb') as f:
@@ -360,21 +368,169 @@ def callback():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("home"))
+    return redirect("home")
 
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html", name=session["name"], email=session["email"])
+    if "discord_id" in session:
+        user = discord.fetch_user()
+        return render_template("profile.html", name=user.username, email=user.email, id=user.id)
+    else:
+        return render_template("profile.html", name=session["name"], email=session["email"], id=session['google_id'])
 
 
 @app.route("/")
 def home():
-    if "google_id" not in session:
-        return render_template("index.html")
+    if "discord_id" not in session:
+        if "google_id" not in session:
+            return render_template("index.html")
 
     return redirect(url_for("generator"))
 
+
+@app.route("/discord-login")
+def discord_login():
+    return discord.create_session()
+
+@app.route("/discordredirect")
+def discord_callback():
+    discord.callback()
+
+    user = discord.fetch_user()
+
+    session["discord_id"] = user.id
+
+    if not os.path.exists(f"./data/saved_characters/{user.id}"):
+        os.mkdir(f"./data/saved_characters/{user.id}")
+
+        with open("./data/users.csv", "a") as file:
+            writer_obj = writer(file)
+            writer_obj.writerow([datetime.datetime.now(), user.username, user.email])
+
+    return redirect(url_for("generator"))
+
+
+@app.route('/apigen', methods=["GET", "POST"])
+def api_generate_character():
+
+    if request.method == "GET":
+        name = request.args["name"]
+        description = request.args["description"]
+
+        # Get user input for other character details
+        gender = request.args["gender"]
+        age = request.args["age"]
+        occupation = request.args["occupation"]
+        height = request.args["height"]
+        hair_color = request.args["hair_color"]
+        eye_color = request.args["eye_color"]
+        weight = request.args["weight"]
+        location = request.args["location"]
+
+        if not name:
+            if gender:
+                name = generate_random_name(gender)
+            else:
+                name = generate_random_name()
+
+        # Use GPT-3 to generate a unique character based on the user's input
+        prompt = f"Create a detailed description of an original character named {name}. {description}"
+
+        # Add the other character details to the prompt if provided by the user
+
+        if gender:
+            prompt += f" The character's gender is {gender}."
+        else:
+            gender = generate_value_with_api_call("gender")
+            prompt += f" The character's gender is {gender}."
+
+        if age:
+            prompt += f" The character's age is {age}."
+        else:
+            age = generate_value_with_api_call("age")
+            prompt += f" The character's age is {age}."
+
+        if occupation:
+            prompt += f" The character's occupation is {occupation}."
+        else:
+            occupation = generate_value_with_api_call("occupation")
+            prompt += f" The character's occupation is {occupation}."
+
+        if height:
+            prompt += f" The character's height is {height}."
+        else:
+            height = generate_value_with_api_call("height")
+            prompt += f" The character's height is {height}."
+
+        if hair_color:
+            prompt += f" The character's hair color is {hair_color}."
+        else:
+            hair_color = generate_value_with_api_call("hair_color")
+            prompt += f" The character's hair color is {hair_color}."
+
+        if eye_color:
+            prompt += f" The character's eye color is {eye_color}."
+        else:
+            eye_color = generate_value_with_api_call("eye_color")
+            prompt += f" The character's eye color is {eye_color}."
+
+        if weight:
+            prompt += f" The character's weight is {weight}."
+        else:
+            weight = generate_value_with_api_call("weight")
+            prompt += f" The character's weight is {weight}."
+
+        if location:
+            prompt += f" The character is from {location}."
+        else:
+            location = generate_value_with_api_call("location")
+            prompt += f" The character is from {location}."
+
+        completions = openai.Completion.create(engine="text-davinci-003", prompt=prompt, max_tokens=200, n=1, stop=None,
+                                               temperature=0.7)
+
+        token_usage = completions.usage["total_tokens"]
+
+        with open(API_USAGE_FILE, "a") as file:
+            writer_obj = writer(file)
+            writer_obj.writerow([datetime.datetime.now(), token_usage, "Generated Character"])
+
+        # Get the generated character
+        character = completions.choices[0].text
+        character_id = str(uuid.uuid4())
+        character_data = {"desc": character,
+                 "name": name,
+                 "age": age,
+                 "weight": weight,
+                 "height": height,
+                 "location": location,
+                 "eye_color": eye_color,
+                 "hair_color": hair_color,
+                 "occupation": occupation,
+                 "id": character_id}
+
+        # save the character object with the unique ID to a file
+        with open(f'data/saved_characters/{character_id}.pickle', 'wb') as f:
+            pickle.dump(
+                character_data, f)
+
+        return jsonify(character_data)
+
+    if request.method == "POST":
+        # Get user input for the character's name and description
+        return "tf u tryna do"
+    
+@app.route("/home")
+def homeredirect():
+    return redirect(url_for("home"))
+
+@app.route("/testing", methods=["GET", "POST"])
+def testing():
+    if request.method == "GET":
+        return request.json()
+    if request.method == "POST":
+        return request.json()
 
 if __name__ == "__main__":
     app.run(host=HOST, port=PORT, debug=DEBUG)
