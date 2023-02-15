@@ -3,6 +3,9 @@ import os
 from flask import Flask, render_template, request, session, abort, redirect, url_for, jsonify
 from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
 
+import discord
+from discord.ext import commands
+
 import openai
 import random
 import pickle
@@ -18,10 +21,9 @@ import google.auth.transport.requests
 import requests
 
 from google_auth_oauthlib.flow import Flow
+from config import * 
 
 load_dotenv()
-
-from config import *
 
 logging.basicConfig(filename="./logs/visits.log",
                     filemode='a',
@@ -36,10 +38,17 @@ app.secret_key = "penis-hat-and-balls"
 
 app.config["DISCORD_CLIENT_ID"] = 1068186999200174221    
 app.config["DISCORD_CLIENT_SECRET"] = "KlvxG-qe7CrFCm1eOuxF8iw3kQ4xo81B"                
-app.config["DISCORD_REDIRECT_URI"] = "https://sab3r.ml/discordredirect"                
-app.config["DISCORD_BOT_TOKEN"] = "MTA2ODE4Njk5OTIwMDE3NDIyMQ.G5E_Tj.4M3pLLhmI416-wMiMr8SJZjegHLy_2noNMV8ac"
+app.config["DISCORD_REDIRECT_URI"] = "https://characterwizard.net/discordredirect"                
+app.config["DISCORD_BOT_TOKEN"] = "MTA2ODE4Njk5OTIwMDE3NDIyMQ.GCz0yL.Ta3f2mCwwnV-RJ4vVY4hqr2W2LBoVjIpUROx1o"
 
-discord = DiscordOAuth2Session(app)
+TOKEN = "MTA2ODE4Njk5OTIwMDE3NDIyMQ.GCz0yL.Ta3f2mCwwnV-RJ4vVY4hqr2W2LBoVjIpUROx1o"
+CHANNEL_ID_FOR_SUBMISSIONS = 1068203096146202624
+
+authorized_users = [892489662378168330]
+
+discord_auth_session = DiscordOAuth2Session(app)
+
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
 
 DAVINCI = 'text-davinci-003'
 CURIE = 'text-curie-001'
@@ -52,6 +61,7 @@ openai.api_key = os.getenv("API_KEY")
 
 client_secrets_file = os.path.join(os.getcwd(), "client_secret.json")
 
+
 flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
                                      scopes=["https://www.googleapis.com/auth/userinfo.profile",
                                              "https://www.googleapis.com/auth/userinfo.email", "openid"],
@@ -60,6 +70,38 @@ flow = Flow.from_client_secrets_file(client_secrets_file=client_secrets_file,
 @app.errorhandler(Unauthorized)
 def redirect_unauthorized(e):
     return redirect(url_for("login"))
+
+def validate_user(id):
+        if os.path.exists(f"{DATA_PATH}/saved_characters/{id}"):
+                return True
+        return False
+
+def use_token(id):
+        if not validate_user(id):
+                raise UserNotFound()
+        else:
+                write_token_data(id, read_token_data()-1)
+
+# Function to write the token data for a user to a pickle file
+def write_token_data(user_id: int, tokens: int):
+    # Open the pickle file in binary write mode
+    with open("token_data.pickle", "wb") as token_file:
+        # Create a dictionary with the user's ID and token amount
+        data = {user_id: tokens}
+        # Write the data to the pickle file
+        pickle.dump(data, token_file)
+
+# Function to read the token data for a user from a pickle file
+def read_token_data(user_id: int):
+    try:
+        # Open the pickle file in binary read mode
+        with open("token_data.pickle", "rb") as token_file:
+            # Load the data from the pickle file
+            data = pickle.load(token_file)
+            # Return the number of tokens for the user
+            return data[user_id]
+    except:
+        return None
 
 
 def generate_value_with_api_call(name):
@@ -136,7 +178,7 @@ def login_is_required(function):
     def wrapper(*args, **kwargs):
         if "discord_id" not in session:
             if "google_id" not in session:
-                return abort(401)
+                return redirect(url_for("home"))
 
         else:
             return function()
@@ -236,7 +278,7 @@ def generator():
         character = completions.choices[0].text
 
         character_id = str(uuid.uuid4())
-        user_id = discord.fetch_user().id if "discord_id" in session else session["google_id"]
+        user_id = discord_auth_session.fetch_user().id if "discord_id" in session else session["google_id"]
 
         # save the character object with the unique ID to a file
         with open(f'data/saved_characters/{user_id}/{character_id}.pickle', 'wb') as f:
@@ -274,7 +316,7 @@ def character(id):
         if len(id) != 36:
             abort(501)
 
-        user_id = discord.fetch_user().id if "discord_id" in session else session["google_id"]
+        user_id = discord_auth_session.fetch_user().id if "discord_id" in session else session["google_id"]
         with open(f'data/saved_characters/{user_id}/{id}.pickle', 'rb') as f:
             data = pickle.load(f)
         
@@ -374,7 +416,7 @@ def logout():
 @app.route("/profile")
 def profile():
     if "discord_id" in session:
-        user = discord.fetch_user()
+        user = discord_auth_session.fetch_user()
         return render_template("profile.html", name=user.username, email=user.email, id=user.id)
     else:
         return render_template("profile.html", name=session["name"], email=session["email"], id=session['google_id'])
@@ -391,22 +433,25 @@ def home():
 
 @app.route("/discord-login")
 def discord_login():
-    return discord.create_session()
+    return discord_auth_session.create_session()
 
 @app.route("/discordredirect")
 def discord_callback():
-    discord.callback()
+    discord_auth_session.callback()
 
-    user = discord.fetch_user()
+    user = discord_auth_session.fetch_user()
 
     session["discord_id"] = user.id
 
     if not os.path.exists(f"./data/saved_characters/{user.id}"):
         os.mkdir(f"./data/saved_characters/{user.id}")
+        with open(f"./data/saved_characters/{user.id}/tokens.txt", "w") as f:
+            f.write(str(DEFAULT_TOKEN_VALUE))
 
         with open("./data/users.csv", "a") as file:
             writer_obj = writer(file)
             writer_obj.writerow([datetime.datetime.now(), user.username, user.email])
+    
 
     return redirect(url_for("generator"))
 
@@ -531,6 +576,7 @@ def testing():
         return request.json()
     if request.method == "POST":
         return request.json()
+
 
 if __name__ == "__main__":
     app.run(host=HOST, port=PORT, debug=DEBUG)

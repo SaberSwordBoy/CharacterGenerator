@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Home | CharacterCraft</title>
+        <title>Home | CharacterWizard</title>
         <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/styles.css')}}">
 		<link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7876122997838409"
+            crossorigin="anonymous"></script>
+
+            <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
        {% include 'navigation.html' %}
-        <h1 style="border-radius: 49px; background-color: #D5859E;">CharacterCraft Generator</h1>
-        <div class="container">
+        <div class="container" id="cont1">
             <div class="description">
-                    <p>Welcome to CharacterCraft, your ultimate destination for creating unique and original characters.
-                        Our platform utilizes the power of OpenAI's GPT-3 model to brin your imagination to life.
-                        Whether you're a writer looking for inspiration or a roleplayer in search of the perfect character, CharacterCraft has you covered.
-                        With a wide range of options to customize your character including gender, age, occupation, height, hair color, and more, the possibilities are endless.
-                        Create, save, and share your characters with our user-friendly interface.<br>
-                        Start crafting your next character masterpiece!</p>
+                    <p>CharacterWizard is an AI-powered character generator. It uses cutting-edge technology to create unique and detailed
+                    characters based on your prompts. Simply enter in the characteristics and traits you want your character to have, and
+                    our AI will do the rest, deciding on what you <em>didn't</em> fill out automatically. Try it out today and see how easy it is to create compelling characters with
+                    CharacterWizard!</p>
                 </div>
             <div class="chargen">
                 <form method="post" action="{{ url_for('generator') }}">

@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>Login | CharacterWizard</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+
     <link rel="apple-touch-icon" sizes="180x180"
           href="{{ url_for('static', filename='favicon/apple-touch-icon.png') }}">
     <link rel="icon" type="image/png" sizes="32x32"
@@ -13,6 +15,8 @@
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7876122997838409"
         crossorigin="anonymous"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
         body {
@@ -27,10 +31,9 @@
             justify-content: center;
             height: 100vh;
             background-size: cover;
-            background-position: center;
+            background-position: center top;
 			
-            background-image: url("{{ url_for('static', filename='background.png') }}");
-			background-image: url("../static/background.png");
+            background-image: url("{{ url_for('static', filename='characterwizard.png') }}");
 
         }
 
@@ -80,10 +83,28 @@
             margin-top: 1rem;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 790px) {
             .login-content {
-                width: 95%;
-                font-size: 200%;
+                width: 85%;
+                font-size: 100%;
+                margin-top: 40vh;
+
+                background-color: rgba(244, 216, 169, 0.561);
+            }
+
+            .discord-btn .google-btn {
+                font-size: 300%;
+                width: 200px;
+                height: 75px;
+            }
+
+            body {
+                background-image: url("{{ url_for('static', filename='characterwizard mobile.png') }}");
+                background-size: cover;
+                background-position: top;
+            }
+            .login-container {
+                background: none;
             }
         }
     </style>
@@ -91,14 +112,13 @@
 <body>
 <div class="login-container">
     <div class="login-content">
-        <h1>CharacterWizard</h1>
-        <p>Welcome to CharacterWizard, the premier destination for character generation and customization. Our state-of-the-art
+        <h3>Welcome to CharacterWizard, the premier destination for character generation and customization. Our state-of-the-art
         technology, powered by OpenAI, allows you to create unique and detailed characters for your stories, games, and
         role-playing sessions. With a user-friendly interface and a wide range of customization options, CharacterWizard is
         the perfect tool for writers, gamers, and creative minds everywhere. Whether you're a seasoned veteran or a first-time
-        user, our site is designed to make character creation quick, easy, and fun. So come on in and start creating today!</p>
+        user, our site is designed to make character creation quick, easy, and fun. So come on in and start creating today!</h3>
 
-        <button class="google-btn"><a href="{{ url_for("login") }}">Continue with Google</a></button>
+        <button disabled class="google-btn"><a href="{{ url_for("login") }}">Continue with Google</a></button>
         <button class="discord-btn"><a href="{{ url_for("discord_login") }}">Login with Discord</a></button>
     </div>
 </div>
